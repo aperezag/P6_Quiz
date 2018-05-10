@@ -153,3 +153,83 @@ exports.check = (req, res, next) => {
         answer
     });
 };
+
+exports.randomplay = (req, res, next) => {
+    const answer = req.query.answer || '';
+
+    const score=0;
+
+
+    if(models.session.count()===0){
+        nsesion();
+    } 
+
+    const sesion = req.session.randomPlay;
+    const quizzes = sesion.data;
+    const i = Math.floor((Math.random() * quizzes.length));
+    const id = quizzes[i];
+    const cont = models.quiz.count();
+    score = cont-quizzes.length();
+
+    const quiz = models.quiz.findById(id);
+
+    res.render('quizzes/random_play',{
+        quiz: quiz,
+        answer: answer,
+        score: score
+    });
+
+};
+ 
+ exports.randomcheck = (req, res, next) => {
+    const answer = req.query.answer || "";
+    const score=0;
+    const quizId = Number(req.params.quizId);
+    const quiz = models.quiz.findById(quizId);
+    const sesion = req.session.randomPlay;
+    const quizzes = sesion.data;
+    const result = answer.toLowerCase().trim === quiz.answer.toLowerCase().trim()
+
+    if(result){
+        quizzes.splice(i, 1);
+        sesion.data = quizzes;
+        models.session.update(sesion);
+
+    }
+    score=models.quiz.count()-quizzes.length();
+
+    if(quizzes.length()===0){
+        res.render('quizzes/random_nomore', {
+            score: score
+        });
+
+    }else{
+
+        res.render('quizzes/random_result',{
+            score: score,
+            answer: answer,
+            result: result
+        });
+    }
+
+};
+
+const nsesion = () =>{
+    models.quiz.count().
+    then(n =>{
+
+        var quizzes=[];
+         for(let i=0; i<n; i++){
+            quizzes[i]=i+1;
+         }
+
+        let nsesion = {
+            sid: randomPlay,
+            expires:"" ,
+            data: quizzes
+        };
+        models.session.create(nsesion);
+        session.save();
+        resolve();
+    });
+};
