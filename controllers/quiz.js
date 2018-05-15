@@ -155,50 +155,51 @@ exports.check = (req, res, next) => {
 };
 
 exports.randomplay = (req, res, next) => {
-    const answer = req.query.answer || '';
-
-    const score=0;
-
 
     if(models.session.count()===0){
-        nsesion();
+        req.session.randomPlay = [];
+        models.quiz.count()
+        .then(n =>{
+
+         for(let i=0; i<n; i++){
+            req.session.randomPlay[i]=i+1;
+            console.log("randomplay id:"+req.session.randomPlay[i]);
+         }
+    });
+
+        /*req.session.randomPlay = nsesion();*/
+        req.session.score = 0;
     } 
 
-    const sesion = req.session.randomPlay;
-    const quizzes = sesion.data;
-    const i = Math.floor((Math.random() * quizzes.length));
-    const id = quizzes[i];
-    const cont = models.quiz.count();
-    score = cont-quizzes.length();
-
+    const i = Math.floor((Math.random() * req.session.randomPlay.length));
+    const id = req.session.randomPlay[i];
     const quiz = models.quiz.findById(id);
 
-    res.render('quizzes/random_play',{
+    req.session.randomPlay.splice(i,1);
+
+    res.render('quizzes/random_result',{
         quiz: quiz,
-        answer: answer,
-        score: score
+        score: req.session.score
     });
+
+
 
 };
  
  exports.randomcheck = (req, res, next) => {
-    const answer = req.query.answer || "";
-    const score=0;
-    const quizId = Number(req.params.quizId);
+    const answer = req.query.answer ;
+    const quizId = req.params.quizId;
     const quiz = models.quiz.findById(quizId);
-    const sesion = req.session.randomPlay;
-    const quizzes = sesion.data;
-    const result = answer.toLowerCase().trim === quiz.answer.toLowerCase().trim()
 
-    if(result){
-        quizzes.splice(i, 1);
-        sesion.data = quizzes;
-        models.session.update(sesion);
-
+    if(answer.toLowerCase().trim === quiz.answer.toLowerCase().trim()){
+        req.session.score++;
+        result = 1;
+    }else{
+        result=0;
     }
-    score=models.quiz.count()-quizzes.length();
 
-    if(quizzes.length()===0){
+    if(req.session.randomPlay.length()===0){
+
         res.render('quizzes/random_nomore', {
             score: score
         });
@@ -222,14 +223,6 @@ const nsesion = () =>{
          for(let i=0; i<n; i++){
             quizzes[i]=i+1;
          }
-
-        let nsesion = {
-            sid: randomPlay,
-            expires:"" ,
-            data: quizzes
-        };
-        models.session.create(nsesion);
-        session.save();
-        resolve();
+         return quizzes;
     });
 };
