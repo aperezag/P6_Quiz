@@ -112,7 +112,6 @@ exports.update = (req, res, next) => {
 
 // DELETE /quizzes/:quizId
 exports.destroy = (req, res, next) => {
-
     req.quiz.destroy()
     .then(() => {
         req.flash('success', 'Quiz deleted successfully.');
@@ -153,6 +152,7 @@ exports.check = (req, res, next) => {
         answer
     });
 };
+
 //GET /quizzes/randomplay
 exports.playrandom = (req, res, next) => {
 

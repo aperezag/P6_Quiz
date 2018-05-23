@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 
@@ -13,7 +14,9 @@ router.get('/author', (req, res, next) => {
     res.render('author');
 });
 
-
+router.get('/quizzes/randomplay',quizController.playrandom);
+router.get('/quizzes/randomcheck/:quizId(\\d+)',quizController.playresult);
+router.get('/quizzes/random');
 // Autoload for routes using :quizId
 router.param('quizId', quizController.load);
 
@@ -27,8 +30,6 @@ router.get('/quizzes/:quizId(\\d+)/edit',  quizController.edit);
 router.put('/quizzes/:quizId(\\d+)',       quizController.update);
 router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 
-router.get('/quizzes/randomplay',		   quizController.randomplay);
-router.get('/quizzes/random_result/:quizId(\\d+)',		   quizController.randomresult);
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
