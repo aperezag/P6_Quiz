@@ -28,7 +28,7 @@ router.put('/quizzes/:quizId(\\d+)',       quizController.update);
 router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 
 router.get('/quizzes/randomplay',		   quizController.randomplay);
-router.get('/quizzes/random_result/:quizId(\\d+)',		   quizController.randomcheck);
+router.get('/quizzes/random_result/:quizId(\\d+)',		   quizController.randomresult);
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
