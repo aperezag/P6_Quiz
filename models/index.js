@@ -1,3 +1,4 @@
+
 const path = require('path');
 
 // Load ORM
@@ -25,7 +26,6 @@ sequelize.import(path.join(__dirname,'user'));
 // Session
 sequelize.import(path.join(__dirname,'session'));
 
-
 // Relation between models
 
 const {quiz, tip, user} = sequelize.models;
@@ -38,4 +38,7 @@ user.hasMany(quiz, {foreignKey: 'authorId'});
 quiz.belongsTo(user, {as: 'author', foreignKey: 'authorId'});
 
 
+
 module.exports = sequelize;
+
+    
